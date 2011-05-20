@@ -1,0 +1,37 @@
+*ucompleteme.txt* better code completion for vim	*ucompleteme*
+
+
+CONTENTS						*ucompleteme-contents*
+
+ 1. Introduction            |ucompleteme-intro|
+ 2. Usage	            |ucompleteme-usage|
+ 3. Installation            |ucompleteme-install|
+
+
+INTRODUCTION						*ucompleteme-intro*
+
+ucompleteme is a Vim plugin for insert-mode completion.  It combines the
+results of omni-completion with keywords in the current file.
+
+The thing is, omni-complete works well, but insert mode completion works well
+too, and I don't want to think about what kind of completion to use, I just
+want Vim to complete the word I'm typing when I press <tab>.  The nice thing
+about `ucompleteme` is it does what you would probably want anyway -- it shows
+you omni-completeion results followed by the closest matches to your cursor.
+
+
+USAGE							*ucompleteme-usage*
+
+When you are typing a word and you press the tab key, `ucompleteme` will fill
+the pop-up menu with the results of omni-completion.  After that it will search
+line-by-line progressively further from your cursor for keywords that match as
+well.  This is similar to standard insert-mode completion, except it is
+searching both forward and backward.
+
+
+INSTALLATION						*ucompleteme-install*
+
+Put the "ucompleteme.vim" file in your |runtimepath|, and add the following to
+your |vimrc|:
+
+	call ucompleteme#Setup()
