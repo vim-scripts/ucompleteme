@@ -2,44 +2,65 @@ Overview
 --------
 
 `ucompleteme` is a Vim plugin for insert-mode completion.  It combines the
-results of omni-completion with keywords in the current file.
+results of omni-completion with its own "proximity" completion function.
 
-The thing is, omni-complete works well, but insert mode completion works well
-too, and I don't want to think about what kind of completion to use, I just
-want Vim to complete the word I'm typing when I press `<tab>`.  The nice thing
-about `ucompleteme` is it does what you would probably want anyway -- it shows
-you omni-completeion results followed by the closest matches to your cursor.
+`ucompleteme` attempts to provide completion options intelligently, so the user
+doesn't have to think about what kind of code completion to use
+([omni-completion](http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-O),
+[current file completion](http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-N),
+etc.).  Plugins like
+[SuperTab](http://www.vim.org/scripts/script.php?script_id=1643) provide a
+means to easily switch between different completion methods, but they aren't as
+opinionated about building the list of matches for the user.
+
+The philosophy behind `ucompleteme` is that instead of having to think about
+which completion type is best, the completion funciton should make an educated
+guess by first running the omni-completion function (where available), then
+finding matches within the current buffer, then other buffers of the same
+filetype, and finally the remaining buffers.
 
 
-Usage
------
+Details
+-------
 
-When you are typing a word and you press the tab key, `ucompleteme` will fill
-the pop-up menu with the results of omni-completion.  After that it will search
-line-by-line progressively further from your cursor for keywords that match as
-well.  This is similar to standard insert-mode completion, except it is
-searching both forward and backward.
+`ucompleteme` provides a [user-defined completion function](http://vimdoc.sourceforge.net/htmldoc/insert.html#i_CTRL-X_CTRL-U).
+By default it re-maps `<tab>` in insert mode to use this function.  If an
+omnifuc is defined, `ucompletme` starts by populating the list with those
+results first and giving the user a chance to interact.  After that it will run
+its own "proximity" completion function that searches each line of a buffer
+progressively further from the cursor.  The proximity search is run on the
+current buffer, and then the other buffers of the same filetype, and finally
+the remaining open buffers.
+
+
+Options
+-------
+
+ - **g:ucompleteme\_map\_tab**: if this is set to 1, `ucompleteme` will re-map
+   `<tab>` in insert mode
+
+ - **g:max\_lines\_for\_omnifunc**: omni-completion functions can be slow for
+   large files.  this determines how large a file can be before `ucompleteme`
+   will not skip using omni-completion and just use keyword completion.
 
 
 Installation
 ------------
 
-Put the "ucompleteme.vim" file in your [Vim Runtimepath][1]'s autoload
+Put the "ucompleteme.vim" file in your [Vim
+Runtimepath](http://www.vim.org/scripts/script.php?script_id=1643)'s autoload
 direcory:
 
  - On Linux/Mac OS X: `~/.vim/autoload`
 
  - On Windows: `$HOME/vimfiles/autoload`
 
-If you're using a Vim package manager like [Tim Pope][3]'s [pathogen][4], then
+If you're using a Vim package manager like [Tim Pope](http://tpo.pe/)'s
+[pathogen](http://www.vim.org/scripts/script.php?script_id=2332 ), then
 you should be able to just clone this repository into the "bundles" directory.
 
-Finally, add the following to your [.vimrc][2]:
+Finally, add the following to your
+[.vimrc](http://vimdoc.sourceforge.net/htmldoc/starting.html#.vimrc ):
 
 	call ucompleteme#Setup()
 
-
-[1]: http://vimdoc.sourceforge.net/htmldoc/options.html#'runtimepath' "Vim Runtimepath"
-[2]: http://vimdoc.sourceforge.net/htmldoc/starting.html#.vimrc ".vimrc"
-[3]: http://tpo.pe/ "Tim Pope"
-[4]: http://www.vim.org/scripts/script.php?script_id=2332 "pathogen"
